@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
-import { ToastService } from '../../../core/services/toast.service';
 import { CommonModule } from '@angular/common';
+import { ToastService, Toast } from '../../../core/services/toast.service';
 
 @Component({
   selector: 'app-toast',
@@ -10,5 +10,10 @@ import { CommonModule } from '@angular/common';
   styleUrl: './toast.component.css'
 })
 export class ToastComponent {
-  public toastService = inject(ToastService);
+  // Inject the service to access the 'toasts' signal
+  toastService = inject(ToastService);
+
+  removeToast(toast: Toast) {
+    this.toastService.remove(toast);
+  }
 }

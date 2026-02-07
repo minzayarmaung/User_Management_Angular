@@ -1,0 +1,145 @@
+<div class="card border-0 shadow-sm">
+    <div class="card-header bg-white py-3 border-bottom">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <h5 class="mb-0 fw-bold">System Users</h5>
+                <p class="text-muted small mb-0">Manage all registered accounts and roles</p>
+            </div>
+            <button class="btn btn-primary fw-bold" data-bs-toggle="modal" data-bs-target="#userModal" (click)="openCreateModal()">
+        <i class="bi bi-person-plus-fill me-2"></i>Create User
+      </button>
+        </div>
+
+        <div class="row align-items-center mb-3">
+            <div class="col-auto">
+                <div class="input-group">
+                    <input type="text" [(ngModel)]="params().keyword" (keyup.enter)="onSearch()" class="form-control" placeholder="Search users...">
+                    <button class="btn btn-outline-secondary" type="button" (click)="toggleSort()" title="Toggle Sort Direction">
+            <i class="bi" [ngClass]="params().sortDir === 'ASC' ? 'bi-sort-numeric-down' : 'bi-sort-numeric-up-alt'"></i>
+            {{params().sortDir}}
+          </button>
+                    <button class="btn btn-primary" type="button" (click)="onSearch()">
+            <i class="bi bi-search"></i> Search
+          </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex gap-4 border-top pt-3">
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" role="switch" id="adminToggle" [(ngModel)]="params().includeAdmins" (change)="onSearch()">
+                <label class="form-check-label small fw-bold" for="adminToggle">Include Admins</label>
+            </div>
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" role="switch" id="banToggle" [(ngModel)]="params().includeBanUsers" (change)="onSearch()">
+                <label class="form-check-label small fw-bold" for="banToggle">Include Banned Users</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="bg-light text-muted small text-uppercase font-weight-bold">
+                <tr>
+                    <th class="ps-4">ID</th>
+                    <th>User Details</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                    <th class="text-end pe-4">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (user of users(); track user.userId) {
+                <tr>
+                    <td class="ps-4 text-muted font-monospace">#{{user.userId}}</td>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <div class="avatar-circle me-3 bg-primary text-white d-flex align-items-center justify-content-center rounded-circle" style="width: 38px; height: 38px; font-weight: bold;">
+                                {{user.username.charAt(0).toUpperCase()}}
+                            </div>
+                            <div>
+                                <div class="fw-bold">{{user.username}}</div>
+                                <div class="text-muted small">{{user.email}}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="badge rounded-pill px-3 py-2" [ngClass]="user.role === 'ADMIN' ? 'bg-dark' : 'bg-primary-subtle text-primary'">
+              {{user.role}}
+            </span>
+                    </td>
+                    <td>
+                        <span class="badge" [ngClass]="user.status === 'ACTIVE' ? 'text-bg-success' : 'text-bg-danger'">
+              {{ user.status === 'ACTIVE' ? 'Active' : 'Banned' }}
+            </span>
+                    </td>
+                    <td class="text-end pe-4">
+                        <button class="btn btn-sm btn-light text-primary fw-bold me-2" data-bs-toggle="modal" data-bs-target="#userModal" (click)="openEditModal(user)">
+              Edit
+            </button> @if (user.status === 'ACTIVE') {
+                        <button (click)="onBan(user.userId)" class="btn btn-sm btn-outline-danger fw-bold">
+              <i class="bi bi-slash-circle"></i> 
+            </button> } @else {
+                        <button (click)="onReactivate(user.userId)" class="btn btn-sm btn-success fw-bold text-white">
+              <i class="bi bi-check-lg"></i>
+            </button> }
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal fade" id="userModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header border-bottom-0 p-4 pb-0">
+                <h5 class="modal-title fw-bold">{{ isEditMode() ? 'Edit User' : 'Create New User' }}</h5>
+                <button type="button" class="btn-close" id="closeUserModal" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <form [formGroup]="userForm" (ngSubmit)="saveUser()">
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Username</label>
+                        <input type="text" formControlName="username" class="form-control" placeholder="Enter username">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Email</label>
+                        <input type="email" formControlName="email" class="form-control" [class.is-invalid]="userForm.get('email')?.invalid && userForm.get('email')?.dirty" placeholder="user@example.com"> @if (userForm.get('email')?.errors?.['email']
+                        && userForm.get('email')?.dirty) {
+                        <div class="text-danger small mt-1">Please enter a valid email address.</div>
+                        }
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Password</label>
+                        <div class="input-group">
+                            <input [type]="isPasswordVisible() ? 'text' : 'password'" formControlName="password" class="form-control" [class.is-invalid]="userForm.get('password')?.invalid && userForm.get('password')?.dirty" [placeholder]="isEditMode() ? 'Leave blank to keep current' : 'Enter password'">
+
+                            <button class="btn btn-outline-secondary" type="button" (click)="togglePasswordVisibility()">
+                            <i class="bi" [ngClass]="isPasswordVisible() ? 'bi-eye-slash' : 'bi-eye'"></i>
+                            </button>
+                        </div>
+
+                        @if (userForm.get('password')?.dirty) { @if (!isEditMode() && userForm.get('password')?.errors?.['required']) {
+                        <div class="text-danger small mt-1">Password is required for new users.</div>
+                        } @if (userForm.get('password')?.errors?.['pattern']) {
+                        <div class="text-danger small mt-1">Must be at least 8 characters with letters and numbers.</div>
+                        } }
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label small fw-bold">Role</label>
+                        <select formControlName="role" class="form-select">
+                            <option value="USER">User</option>
+                            <option value="ADMIN">Admin</option>
+                        </select>
+                    </div>
+                    <button type="submit" [disabled]="userForm.invalid" class="btn btn-primary w-100 py-2 fw-bold shadow-sm">
+                        {{ isEditMode() ? 'Save Changes' : 'Create User' }}
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

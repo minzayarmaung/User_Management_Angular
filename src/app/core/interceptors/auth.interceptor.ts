@@ -1,26 +1,46 @@
 import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { catchError, switchMap, throwError } from 'rxjs';
+import { catchError, throwError, switchMap, BehaviorSubject, filter, take, finalize } from 'rxjs';
 import { AuthService } from '../services/auth.service';
+
+let isRefreshing = false;
+const refreshTokenSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
 
-  const securedReq = req.clone({ withCredentials: true });
-
-  return next(securedReq).pipe(
+  return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
-      if (error.status === 401) {
-        return authService.refreshToken().pipe(
-          switchMap(() => {
-            return next(securedReq);
-          }),
-          catchError((refreshErr) => {
-            authService.logout();
-            return throwError(() => refreshErr);
-          })
-        );
+      const isAuthRequest = req.url.includes('/auth/users/login') || 
+                            req.url.includes('/auth/users/refresh') || 
+                            req.url.includes('/auth/users/me');
+
+      if (error.status === 401 && !isAuthRequest) {
+        if (!isRefreshing) {
+          isRefreshing = true;
+          refreshTokenSubject.next(null);
+
+          return authService.refreshToken().pipe(
+            switchMap((res) => {
+              isRefreshing = false;
+              refreshTokenSubject.next(res); 
+              return next(req); 
+            }),
+            catchError((err) => {
+              isRefreshing = false;
+              authService.logout();
+              return throwError(() => err);
+            })
+          );
+        } else {
+          return refreshTokenSubject.pipe(
+            filter(token => token !== null),
+            take(1),
+            switchMap(() => next(req)) 
+          );
+        }
       }
+
       return throwError(() => error);
     })
   );

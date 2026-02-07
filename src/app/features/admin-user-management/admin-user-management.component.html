@@ -1,0 +1,31 @@
+<div class="container-fluid p-0">
+    <div class="d-flex">
+        <nav class="bg-dark text-white vh-100 p-3 shadow" style="width: 280px; position: sticky; top: 0;">
+            <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none border-bottom pb-3 w-100">
+                <i class="bi bi-shield-lock-fill me-2 fs-4 text-primary"></i>
+                <span class="fs-4 fw-bold">Admin Pro</span>
+            </a>
+
+            <ul class="nav nav-pills flex-column mb-auto mt-4">
+                <li class="nav-item">
+                    <a routerLink="/admin/users" routerLinkActive="active" class="nav-link text-white d-flex align-items-center">
+                        <i class="bi bi-people-fill me-2"></i> User Management
+                    </a>
+                </li>
+            </ul>
+
+            <hr class="border-secondary">
+
+            <div class="dropdown">
+                <button (click)="onLogout()" class="btn btn-outline-danger w-100 d-flex align-items-center justify-content-center">
+          <i class="bi bi-box-arrow-right me-2"></i>
+          Logout
+        </button>
+            </div>
+        </nav>
+
+        <main class="flex-grow-1 bg-light p-4 p-md-5 overflow-auto">
+            <router-outlet></router-outlet>
+        </main>
+    </div>
+</div>

@@ -1,40 +1,33 @@
-<div class="min-h-screen flex items-center justify-center bg-gray-50">
-    <div class="max-w-md w-full p-8 bg-white rounded-2xl shadow-xl border border-gray-100">
-        <div class="text-center mb-8">
-            <h2 class="text-3xl font-extrabold text-gray-900">Create Account</h2>
-            <p class="mt-2 text-sm text-gray-600">Join our User Management System</p>
-        </div>
+<div class="vh-100 d-flex align-items-center justify-content-center bg-light">
+    <div class="card shadow-lg border-0" style="max-width: 450px; width: 100%;">
+        <div class="card-body p-5">
+            <h2 class="text-center fw-bold mb-4">Create Account</h2>
 
-        <form [formGroup]="signupForm" (ngSubmit)="onSubmit()" class="space-y-5">
-            <div>
-                <label class="block text-sm font-semibold text-gray-700">Username</label>
-                <input type="text" formControlName="username" placeholder="johndoe" class="mt-1 block w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"> @if
-                (signupForm.get('username')?.touched && signupForm.get('username')?.invalid) {
-                <span class="text-xs text-red-500 mt-1 italic">Username is required</span> }
+            <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Username</label>
+                    <input type="text" formControlName="username" class="form-control" placeholder="Choose a username">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Email Address</label>
+                    <input type="email" formControlName="email" class="form-control" placeholder="name@example.com">
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-semibold">Password</label>
+                    <input type="password" formControlName="password" class="form-control" placeholder="At least 6 characters">
+                </div>
+
+                <button type="submit" [disabled]="signupForm.invalid" class="btn btn-primary btn-lg w-100 fw-bold shadow-sm">
+          Register
+        </button>
+            </form>
+
+            <div class="text-center mt-4">
+                <span class="text-muted">Already have an account?</span>
+                <a routerLink="/login" class="text-primary fw-bold text-decoration-none ms-1">Sign In</a>
             </div>
-
-            <div>
-                <label class="block text-sm font-semibold text-gray-700">Email Address</label>
-                <input type="email" formControlName="email" placeholder="name@company.com" class="mt-1 block w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition">                @if (signupForm.get('email')?.touched && signupForm.get('email')?.invalid) {
-                <span class="text-xs text-red-500 mt-1 italic">Please enter a valid email</span> }
-            </div>
-
-            <div>
-                <label class="block text-sm font-semibold text-gray-700">Password</label>
-                <input type="password" formControlName="password" placeholder="••••••••" class="mt-1 block w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition">                @if (signupForm.get('password')?.touched && signupForm.get('password')?.invalid) {
-                <span class="text-xs text-red-500 mt-1 italic">Password must be at least 6 characters</span> }
-            </div>
-
-            <button type="submit" [disabled]="signupForm.invalid" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
-        Register Now
-      </button>
-        </form>
-
-        <div class="mt-8 text-center">
-            <p class="text-sm text-gray-600">
-                Already have an account?
-                <a routerLink="/login" class="font-bold text-blue-600 hover:underline transition">Sign In</a>
-            </p>
         </div>
     </div>
 </div>
