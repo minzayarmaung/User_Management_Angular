@@ -15,6 +15,7 @@ export class UserListComponent implements OnInit {
   private fb = inject(NonNullableFormBuilder);
   private adminService = inject(AdminUserService);
   private toastService = inject(ToastService);
+  selectedUserDetails = signal<any>(null);
 
   passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
 
@@ -87,6 +88,17 @@ export class UserListComponent implements OnInit {
         this.users.set(res.data);
         this.totalItems.set(res.meta.totalItems);
         this.totalPages.set(res.meta.totalPages);
+      }
+    });
+  }
+
+  viewUserDetails(userId: number) {
+    this.adminService.getUserById(userId).subscribe({
+      next: (res) => {
+        this.selectedUserDetails.set(res.data);
+      },
+      error: (err) => {
+        this.toastService.show(err.error?.message || 'Failed to load details', 'error');
       }
     });
   }

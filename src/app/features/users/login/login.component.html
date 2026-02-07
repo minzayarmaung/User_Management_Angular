@@ -2,28 +2,39 @@
     <div class="card shadow-sm border-0" style="max-width: 400px; width: 100%;">
         <div class="card-body p-4">
             <h1 class="text-center mb-4 fw-bold">🔐</h1>
-            <h2 class="text-center mb-4 fw-bold">Admin Pro</h2>
-            <h3 class="text-center mb-4 fw-normal">Welcome Back</h3>
+            <h2 class="text-center mb-2 fw-bold">Admin Pro</h2>
+            <h3 class="text-center mb-4 fw-normal text-muted small">Welcome Back</h3>
+
+            @if (isLocked()) {
+            <div class="alert alert-danger text-center small fw-bold mb-4">
+                Locked for Brute Force prevention. <br> Try again in {{ countdown() }} seconds.
+            </div>
+            }
 
             <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
                 <div class="mb-3">
                     <label class="form-label small text-muted fw-bold">EMAIL ADDRESS</label>
-                    <input type="email" formControlName="email" class="form-control" placeholder="name@example.com">
+                    <input type="email" formControlName="email" class="form-control" [readonly]="isLocked()" placeholder="name@example.com">
                 </div>
 
                 <div class="mb-4">
                     <label class="form-label small text-muted fw-bold">PASSWORD</label>
-                    <input type="password" formControlName="password" class="form-control" placeholder="Enter password">
+                    <div class="input-group">
+                        <input [type]="isPasswordVisible() ? 'text' : 'password'" formControlName="password" class="form-control" [readonly]="isLocked()" placeholder="Enter password">
+                        <button class="btn btn-outline-secondary px-3" type="button" [disabled]="isLocked()" (click)="togglePasswordVisibility()">
+                            <i class="bi" [ngClass]="isPasswordVisible() ? 'bi-eye-slash' : 'bi-eye'"></i>
+                        </button>
+                    </div>
                 </div>
 
-                <button type="submit" [disabled]="loginForm.invalid" class="btn btn-primary w-100 py-2 fw-bold shadow-sm">
-          Sign In
-        </button>
+                <button type="submit" [disabled]="loginForm.invalid || isLocked()" class="btn btn-primary w-100 py-2 fw-bold shadow-sm">
+                    {{ isLocked() ? 'Locked' : 'Sign In' }}
+                </button>
             </form>
 
             <p class="mt-4 text-center small text-muted">
                 Don't have an account?
-                <a routerLink="/signup" class="text-decoration-none fw-bold">Sign Up</a>
+                <a routerLink="/signup" class="text-decoration-none fw-bold ms-1">Sign Up</a>
             </p>
         </div>
     </div>

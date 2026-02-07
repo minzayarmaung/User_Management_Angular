@@ -6,22 +6,48 @@
             <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
                 <div class="mb-3">
                     <label class="form-label fw-semibold">Username</label>
-                    <input type="text" formControlName="username" class="form-control" placeholder="Choose a username">
+                    <input type="text" formControlName="username" class="form-control" [class.is-invalid]="signupForm.get('username')?.invalid && signupForm.get('username')?.dirty" placeholder="Choose a username"> @if (signupForm.get('username')?.invalid
+                    && signupForm.get('username')?.dirty) {
+                    <div class="text-danger small mt-1">Username is required (min 3 chars).</div>
+                    }
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label fw-semibold">Email Address</label>
-                    <input type="email" formControlName="email" class="form-control" placeholder="name@example.com">
+                    <input type="email" formControlName="email" class="form-control" [class.is-invalid]="signupForm.get('email')?.invalid && signupForm.get('email')?.dirty" placeholder="name@example.com"> @if (signupForm.get('email')?.invalid && signupForm.get('email')?.dirty)
+                    {
+                    <div class="text-danger small mt-1">Please enter a valid email address.</div>
+                    }
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Password</label>
+                    <div class="input-group">
+                        <input [type]="isPasswordVisible() ? 'text' : 'password'" formControlName="password" class="form-control" [class.is-invalid]="signupForm.get('password')?.invalid && signupForm.get('password')?.dirty" placeholder="At least 8 characters">
+                        <button class="btn btn-outline-secondary" type="button" (click)="togglePasswordVisibility()">
+                            <i class="bi" [ngClass]="isPasswordVisible() ? 'bi-eye-slash' : 'bi-eye'"></i>
+                        </button>
+                    </div>
+                    @if (signupForm.get('password')?.dirty) { @if (signupForm.get('password')?.errors?.['required']) {
+                    <div class="text-danger small mt-1">Password is required.</div>
+                    } @if (signupForm.get('password')?.errors?.['pattern']) {
+                    <div class="text-danger small mt-1">Must be at least 8 characters with letters and numbers.</div>
+                    } }
                 </div>
 
                 <div class="mb-4">
-                    <label class="form-label fw-semibold">Password</label>
-                    <input type="password" formControlName="password" class="form-control" placeholder="At least 8   characters">
+                    <label class="form-label fw-semibold">Confirm Password</label>
+                    <div class="input-group">
+                        <input [type]="isPasswordVisible() ? 'text' : 'password'" formControlName="confirmPassword" class="form-control" [class.is-invalid]="signupForm.hasError('passwordMismatch') && signupForm.get('confirmPassword')?.dirty" placeholder="Repeat your password">
+                    </div>
+                    @if (signupForm.hasError('passwordMismatch') && signupForm.get('confirmPassword')?.dirty) {
+                    <div class="text-danger small mt-1">Passwords do not match.</div>
+                    }
                 </div>
 
                 <button type="submit" [disabled]="signupForm.invalid" class="btn btn-primary btn-lg w-100 fw-bold shadow-sm">
-          Register
-        </button>
+                    Register
+                </button>
             </form>
 
             <div class="text-center mt-4">
