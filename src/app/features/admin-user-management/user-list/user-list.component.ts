@@ -66,7 +66,6 @@ export class UserListComponent implements OnInit {
     this.isEditMode.set(true);
     this.selectedUserId.set(user.userId);
     
-    // Only apply the pattern for edits (it's optional, but if typed, must be valid)
     this.userForm.get('password')?.setValidators([Validators.pattern(this.passwordPattern)]);
     this.userForm.get('password')?.updateValueAndValidity();
     
