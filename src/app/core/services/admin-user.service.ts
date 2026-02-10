@@ -10,7 +10,7 @@ import { localEnvironment } from '../../../environments/environment';
 })
 export class AdminUserService {
 
-  private readonly API_URL = `${localEnvironment.apiUrl}/admin/userManagement`;
+  private readonly API_URL = `${environment.apiUrl}/admin/userManagement`;
   private http = inject(HttpClient);
 
   getUsers(params: any): Observable<PaginatedApiResponse<any>> {

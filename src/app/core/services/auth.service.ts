@@ -9,7 +9,7 @@ import { localEnvironment } from '../../../environments/environment';
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   
-  private readonly API_URL = `${localEnvironment.apiUrl}/auth/users`;
+  private readonly API_URL = `${environment.apiUrl}/auth/users`;
   private http = inject(HttpClient);
 
   currentUser = signal<LoginResponse | null>(null);
