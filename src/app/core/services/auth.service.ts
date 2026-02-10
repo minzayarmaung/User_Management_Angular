@@ -4,13 +4,13 @@ import { ApiResponse } from '../../shared/models/api-response.model';
 import { LoginResponse, SignUpResponse } from '../../shared/models/auth.model';
 import { Observable, tap } from 'rxjs';
 import { environment } from '../../../environments/environment.prod';
+import { localEnvironment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   
-  private readonly API_URL = `${environment.apiUrl}/auth/users`;
+  private readonly API_URL = `${localEnvironment.apiUrl}/auth/users`;
   private http = inject(HttpClient);
-  // private readonly API_URL = 'http://localhost:8080/user-management/api/v1/auth/users';
 
   currentUser = signal<LoginResponse | null>(null);
 
