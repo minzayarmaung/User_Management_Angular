@@ -35,8 +35,8 @@ export class UserListComponent implements OnInit {
     size: 10,
     sortBy: 'id',
     sortDir: 'ASC',
-    includeBanUsers: false,
-    includeAdmins: false
+    roleFilter: 'ALL',
+    statusFilter: 'ACTIVE_ONLY'
   });
 
   userForm = this.fb.group({

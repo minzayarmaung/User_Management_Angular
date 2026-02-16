@@ -25,16 +25,30 @@
             </div>
         </div>
 
-        <div class="d-flex gap-4 border-top pt-3">
-            <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="adminToggle" [(ngModel)]="params().includeAdmins" (change)="onSearch()">
-                <label class="form-check-label small fw-bold" for="adminToggle">Include Admins</label>
+        <div class="row border-top pt-3">
+
+            <!-- Role Filter -->
+            <div class="col-md-4">
+                <label class="form-label small fw-bold">Role Filter</label>
+                <select class="form-select" [(ngModel)]="params().roleFilter" (change)="onSearch()">
+                    <option value="ALL">All Users</option>
+                    <option value="ONLY_ADMINS">Admins Only</option>
+                    <option value="EXCLUDE_ADMINS">Users Only</option>
+                </select>
             </div>
-            <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="banToggle" [(ngModel)]="params().includeBanUsers" (change)="onSearch()">
-                <label class="form-check-label small fw-bold" for="banToggle">Include Banned Users</label>
+
+            <!-- Status Filter -->
+            <div class="col-md-4">
+                <label class="form-label small fw-bold">Status Filter</label>
+                <select class="form-select" [(ngModel)]="params().statusFilter" (change)="onSearch()">
+                    <option value="ACTIVE_ONLY">Active Only</option>
+                    <option value="BANNED_ONLY">Banned Only</option>
+                    <option value="ALL">All Status</option>
+                </select>
             </div>
+
         </div>
+
     </div>
 
     <div class="table-responsive">

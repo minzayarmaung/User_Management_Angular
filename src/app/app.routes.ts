@@ -23,7 +23,11 @@ export const routes: Routes = [
         path: 'users',
         loadComponent: () => import('./features/admin/admin-user-management/user-list/user-list.component').then(m => m.UserListComponent)
       },
-      { path: '', redirectTo: 'users', pathMatch: 'full' }
+      { path: '', redirectTo: 'users', pathMatch: 'full' },
+      
+      { path: 'dashboard' ,
+        loadComponent: () => import('./features/admin/dashboard/dashboard.component').then(m => m.DashboardComponent)
+      }
     ]
   },
 
