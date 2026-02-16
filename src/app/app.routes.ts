@@ -17,13 +17,17 @@ export const routes: Routes = [
     path: 'admin',
     canActivate: [authGuard],
     data: { role: 'ADMIN' }, // Protect with Admin role
-    loadComponent: () => import('./features/admin-user-management/admin-user-management.component').then(m => m.AdminUserManagementComponent),
+    loadComponent: () => import('./features/admin/admin-user-management/admin-user-management.component').then(m => m.AdminUserManagementComponent),
     children: [
       {
         path: 'users',
-        loadComponent: () => import('./features/admin-user-management/user-list/user-list.component').then(m => m.UserListComponent)
+        loadComponent: () => import('./features/admin/admin-user-management/user-list/user-list.component').then(m => m.UserListComponent)
       },
-      { path: '', redirectTo: 'users', pathMatch: 'full' }
+      { path: '', redirectTo: 'users', pathMatch: 'full' },
+      
+      { path: 'dashboard' ,
+        loadComponent: () => import('./features/admin/dashboard/dashboard.component').then(m => m.DashboardComponent)
+      }
     ]
   },
 

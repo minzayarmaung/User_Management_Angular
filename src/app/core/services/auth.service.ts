@@ -4,7 +4,6 @@ import { ApiResponse } from '../../shared/models/api-response.model';
 import { LoginResponse, SignUpResponse } from '../../shared/models/auth.model';
 import { Observable, tap } from 'rxjs';
 import { environment } from '../../../environments/environment.prod';
-import { localEnvironment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {

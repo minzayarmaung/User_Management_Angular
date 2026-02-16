@@ -1,8 +1,9 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AdminUserService } from '../../../core/services/admin-user.service';
-import { ToastService } from '../../../core/services/toast.service';
+import { AdminUserService } from '../../../../core/services/admin-user.service';
+import { ToastService } from '../../../../core/services/toast.service';
+
 
 @Component({
   selector: 'app-user-list',
@@ -34,8 +35,8 @@ export class UserListComponent implements OnInit {
     size: 10,
     sortBy: 'id',
     sortDir: 'ASC',
-    includeBanUsers: false,
-    includeAdmins: false
+    roleFilter: 'ALL',
+    statusFilter: 'ACTIVE_ONLY'
   });
 
   userForm = this.fb.group({
